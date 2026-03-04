@@ -1,0 +1,121 @@
+\documentclass{beamer}
+\usetheme{default}
+\useoutertheme{miniframes}
+\useinnertheme{circles}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{bookmark}
+\usepackage{url}
+
+% Reusable Navy theme (path from presentations/template/)
+\input{../../theme/navy-theme.tex}
+
+% ============================================
+% TITLE BLOCK – edit for your talk
+% ============================================
+\title[Short Title for Footer]{Your Presentation Title}
+\subtitle{Optional subtitle line}
+\author[Your Name]{Your Name}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% ============================================
+% SECTION 1
+% ============================================
+\section{Introduction}
+
+\begin{frame}{Overview}
+    \textbf{What this talk covers:}
+    \begin{itemize}
+        \item First main point
+        \item Second main point
+        \item Third main point
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Why This Matters}
+    \Large
+    One or two sentences that set the stakes.
+
+    \vspace{1em}
+    \normalsize
+    A short paragraph or bullets to support it.
+\end{frame}
+
+% ============================================
+% SECTION 2
+% ============================================
+\section{Main Content}
+
+\begin{frame}{Key Concept}
+    \begin{enumerate}
+        \item Step one
+        \item Step two
+        \item Step three
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Code or Commands}
+    \textbf{Example:}
+    \begin{lstlisting}
+# Your code or shell commands here
+git status
+git add file.py
+git commit -m "Descriptive message"
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Comparison}
+    \begin{columns}
+        \column{0.48\textwidth}
+        \textbf{Option A:}
+        \begin{itemize}
+            \item Point 1
+            \item Point 2
+        \end{itemize}
+
+        \column{0.48\textwidth}
+        \textbf{Option B:}
+        \begin{itemize}
+            \item Point 1
+            \item Point 2
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+% ============================================
+% SECTION 3
+% ============================================
+\section{Wrap-up}
+
+\begin{frame}{Summary}
+    \begin{itemize}
+        \item Takeaway one
+        \item Takeaway two
+        \item Takeaway three
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Next Steps}
+    \textbf{What you can do next:}
+    \begin{itemize}
+        \item Action item 1
+        \item Action item 2
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Questions?}
+    \begin{center}
+        \Large
+        Questions?
+
+        \vspace{2em}
+        \normalsize
+        Contact: your.email@example.com
+    \end{center}
+\end{frame}
+
+\end{document}

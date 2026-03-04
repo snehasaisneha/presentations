@@ -1,0 +1,64 @@
+% =============================================
+% NAVY THEME FOR BEAMER
+% Reusable theme: \input this file after \documentclass{beamer} and base theme.
+% =============================================
+
+% COLOR SCHEME: Professional Navy
+\definecolor{NavyDark}{RGB}{20, 40, 80}        % Deep navy
+\definecolor{NavyMid}{RGB}{40, 65, 115}        % Medium navy
+\definecolor{NavyLight}{RGB}{70, 100, 150}     % Lighter navy accent
+
+% Main structure color
+\setbeamercolor{structure}{fg=NavyDark}
+
+% Header (top navigation bar)
+\setbeamercolor{section in head/foot}{fg=white, bg=NavyDark}
+\setbeamercolor{subsection in head/foot}{fg=white, bg=NavyMid}
+
+% Footer colors (subtle gradient)
+\setbeamercolor{author in head/foot}{fg=white, bg=NavyLight}
+\setbeamercolor{title in head/foot}{fg=white, bg=NavyMid}
+\setbeamercolor{date in head/foot}{fg=white, bg=NavyDark}
+
+% Title page
+\setbeamercolor{title}{fg=NavyDark}
+\setbeamercolor{subtitle}{fg=NavyMid}
+\setbeamercolor{author}{fg=NavyDark!80}
+\setbeamercolor{date}{fg=NavyDark!60}
+
+% Frame titles
+\setbeamercolor{frametitle}{fg=white, bg=NavyDark}
+\setbeamercolor{framesubtitle}{fg=NavyMid}
+
+% Itemize/enumerate
+\setbeamercolor{item}{fg=NavyDark}
+\setbeamercolor{subitem}{fg=NavyMid}
+
+% Navigation dots
+\setbeamercolor{mini frame}{fg=white, bg=white!30}
+\setbeamercolor{mini frame inactive}{fg=white!50}
+
+% Custom footline: Author | Short Title | Date + Frame Number
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.20\paperwidth,ht=2.5ex,dp=1ex,left,leftskip=1em]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.55\paperwidth,ht=2.5ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.5ex,dp=1ex,right,rightskip=1em]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Code listing style (optional; requires \usepackage{listings} in main doc)
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!10},
+}
