@@ -9,13 +9,13 @@ on:
     branches: [main]
     paths:
       - 'theme/**'
-      - 'presentations/**'
+      - 'presentations/**/main.tex'
       - '.github/workflows/compile-presentations.yml'
   pull_request:
     branches: [main]
     paths:
       - 'theme/**'
-      - 'presentations/**'
+      - 'presentations/**/main.tex'
       - '.github/workflows/compile-presentations.yml'
 
 jobs:
@@ -50,7 +50,7 @@ jobs:
             name=$(basename "$dir")
             if [ "$THEME_CHANGED" = "true" ]; then
               TO_COMPILE="$TO_COMPILE $name"
-            elif echo "$CHANGED_FILES" | grep -q "^presentations/$name/"; then
+            elif echo "$CHANGED_FILES" | grep -q "^presentations/$name/main.tex$"; then
               TO_COMPILE="$TO_COMPILE $name"
             fi
           done
