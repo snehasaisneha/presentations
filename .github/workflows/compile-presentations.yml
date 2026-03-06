@@ -37,7 +37,11 @@ jobs:
           else
             BASE="${{ github.event.before }}"
           fi
+          # Handle missing BASE commit (force-push, first push, or inaccessible commit)
           if [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+            CHANGED_FILES=$(git ls-files)
+          elif ! git cat-file -e "$BASE" 2>/dev/null; then
+            echo "BASE commit $BASE not accessible, compiling all CI-enabled presentations"
             CHANGED_FILES=$(git ls-files)
           else
             CHANGED_FILES=$(git diff --name-only "$BASE" "${{ github.sha }}" --)
