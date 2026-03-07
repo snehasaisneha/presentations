@@ -32,32 +32,12 @@ jobs:
       - name: Find presentations to compile
         id: changed
         run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            BASE="${{ github.event.pull_request.base.sha }}"
-          else
-            BASE="${{ github.event.before }}"
-          fi
-          # Handle missing BASE commit (force-push, first push, or inaccessible commit)
-          if [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
-            CHANGED_FILES=$(git ls-files)
-          elif ! git cat-file -e "$BASE" 2>/dev/null; then
-            echo "BASE commit $BASE not accessible, compiling all CI-enabled presentations"
-            CHANGED_FILES=$(git ls-files)
-          else
-            CHANGED_FILES=$(git diff --name-only "$BASE" "${{ github.sha }}" --)
-          fi
-          THEME_CHANGED=false
-          echo "$CHANGED_FILES" | grep -q '^theme/' && THEME_CHANGED=true
+          # Compile all presentations with .ci-compile marker
           TO_COMPILE=""
           for dir in presentations/*/; do
             [ -f "${dir}.ci-compile" ] || continue
             name=$(basename "$dir")
-            if [ "$THEME_CHANGED" = "true" ]; then
-              TO_COMPILE="$TO_COMPILE $name"
-            elif echo "$CHANGED_FILES" | grep -q "^presentations/$name/main.tex$"; then
-              TO_COMPILE="$TO_COMPILE $name"
-            fi
+            TO_COMPILE="$TO_COMPILE $name"
           done
           TO_COMPILE=$(echo "$TO_COMPILE" | xargs)
           echo "to_compile=$TO_COMPILE" >> "$GITHUB_OUTPUT"
