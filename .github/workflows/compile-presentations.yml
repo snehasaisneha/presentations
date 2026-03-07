@@ -10,12 +10,6 @@ on:
       - 'theme/**'
       - 'presentations/**'
       - '.github/workflows/compile-presentations.yml'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'theme/**'
-      - 'presentations/**'
-      - '.github/workflows/compile-presentations.yml'
   workflow_dispatch:
 
 jobs:
@@ -27,11 +21,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Configure git
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Compile presentations
         run: |
           set -e
-          mkdir -p build-output
-          compiled_any=false
           for dir in presentations/*/; do
             if [ -f "${dir}.ci-compile" ]; then
               name=$(basename "$dir")
@@ -40,17 +38,15 @@ jobs:
               pdflatex -interaction=nonstopmode -halt-on-error main.tex
               pdflatex -interaction=nonstopmode -halt-on-error main.tex
               cd ../..
-              cp "${dir}main.pdf" "build-output/${name}.pdf"
-              compiled_any=true
             fi
           done
-          if [ "$compiled_any" = "false" ]; then
-            echo "No presentations to compile"
-          fi
 
-      - name: Upload PDFs
-        uses: actions/upload-artifact@v4
-        with:
-          name: presentation-pdfs
-          path: build-output/*.pdf
-          if-no-files-found: ignore
+      - name: Commit PDFs
+        run: |
+          git add presentations/*/main.pdf
+          if git diff --staged --quiet; then
+            echo "No PDF changes to commit"
+          else
+            git commit -m "Build PDFs [skip ci]"
+            git push
+          fi
