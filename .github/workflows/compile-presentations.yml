@@ -1,6 +1,5 @@
-# Compile only presentation subfolders that contain .ci-compile and had changes.
+# Compile all presentation subfolders that contain .ci-compile
 # Add an empty .ci-compile file in a presentation subfolder to include it in CI.
-# If theme/ changes, all .ci-compile presentations are recompiled.
 
 name: Compile presentations
 
@@ -9,14 +8,15 @@ on:
     branches: [main]
     paths:
       - 'theme/**'
-      - 'presentations/**/main.tex'
+      - 'presentations/**'
       - '.github/workflows/compile-presentations.yml'
   pull_request:
     branches: [main]
     paths:
       - 'theme/**'
-      - 'presentations/**/main.tex'
+      - 'presentations/**'
       - '.github/workflows/compile-presentations.yml'
+  workflow_dispatch:
 
 jobs:
   compile:
@@ -26,44 +26,31 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Find presentations to compile
-        id: changed
-        run: |
-          # Compile all presentations with .ci-compile marker
-          TO_COMPILE=""
-          for dir in presentations/*/; do
-            [ -f "${dir}.ci-compile" ] || continue
-            name=$(basename "$dir")
-            TO_COMPILE="$TO_COMPILE $name"
-          done
-          TO_COMPILE=$(echo "$TO_COMPILE" | xargs)
-          echo "to_compile=$TO_COMPILE" >> "$GITHUB_OUTPUT"
-          echo "Will compile: ${TO_COMPILE:-none}"
-
-      - name: Compile changed presentations
-        id: compile
+      - name: Compile presentations
         run: |
           set -e
-          compiled_any=false
           mkdir -p build-output
-          for name in ${{ steps.changed.outputs.to_compile }}; do
-            [ -n "$name" ] || continue
-            dir="presentations/$name"
-            echo "::group::Compile $name"
-            (cd "$dir" && pdflatex -interaction=nonstopmode -halt-on-error main.tex)
-            (cd "$dir" && pdflatex -interaction=nonstopmode -halt-on-error main.tex)
-            cp "presentations/$name/main.pdf" "build-output/$name.pdf"
-            echo "::endgroup::"
-            compiled_any=true
+          compiled_any=false
+          for dir in presentations/*/; do
+            if [ -f "${dir}.ci-compile" ]; then
+              name=$(basename "$dir")
+              echo "Compiling: $name"
+              cd "$dir"
+              pdflatex -interaction=nonstopmode -halt-on-error main.tex
+              pdflatex -interaction=nonstopmode -halt-on-error main.tex
+              cd ../..
+              cp "${dir}main.pdf" "build-output/${name}.pdf"
+              compiled_any=true
+            fi
           done
-          echo "compiled_any=$compiled_any" >> "$GITHUB_OUTPUT"
+          if [ "$compiled_any" = "false" ]; then
+            echo "No presentations to compile"
+          fi
 
       - name: Upload PDFs
-        if: steps.compile.outputs.compiled_any == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: presentation-pdfs
           path: build-output/*.pdf
+          if-no-files-found: ignore
